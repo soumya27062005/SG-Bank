@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SG-Bank</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1, h2 {
+      color: #00adb5;
+    }
+
+    form, .links {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      width: 320px;
+      margin-top: 20px;
+    }
+
+    label {
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background-color: #2c2c2c;
+      color: #ffffff;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #00adb5;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #008b91;
+    }
+
+    a {
+      color: #00adb5;
+      text-decoration: none;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const message = params.get("message");
+  
+      if (message) {
+        const msgBox = document.createElement("div");
+        msgBox.textContent = decodeURIComponent(message);
+        msgBox.style.backgroundColor = "#2ecc71";
+        msgBox.style.color = "white";
+        msgBox.style.padding = "15px";
+        msgBox.style.borderRadius = "10px";
+        msgBox.style.margin = "20px auto";
+        msgBox.style.textAlign = "center";
+        msgBox.style.maxWidth = "600px";
+        msgBox.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+        document.body.prepend(msgBox);
+      }
+    });
+  </script>
+  
+<body>
+  <h1>💳 Banking Microservice</h1>
+
+  <form action="/api/transactions" method="POST">
+    <h2>Make a Transaction</h2>
+
+    <label for="from">From Account:</label>
+    <input name="from" id="from" required />
+
+    <label for="to">To Account:</label>
+    <input name="to" id="to" required />
+
+    <label for="amount">Amount:</label>
+    <input name="amount" id="amount" type="number" required />
+
+    <button type="submit">Submit Transaction</button>
+  </form>
+
+  <div class="links">
+    <h2>📊 View Accounts</h2>
+    <a href="/accounts">Open Accounts List</a>
+</div>
+
+ 
+
+  <script>
+    document.getElementById('addAccountForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const balance = document.getElementById('balance').value;
+
+      const res = await fetch('/api/accounts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, balance })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(`✅ Account for ${data.name} with ₹${data.balance} created successfully!`);
+        document.getElementById('addAccountForm').reset();
+      } else {
+        alert(`❌ Error: ${data.error}`);
+      }
+    });
+  </script>
+</body>
+</html>
